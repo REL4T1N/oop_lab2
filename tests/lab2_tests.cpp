@@ -115,13 +115,9 @@ TEST(ElevenTest, GreaterComparison) {
 TEST(ElevenTest, EdgeCases) {
     Eleven zero;
     Eleven num("A5");
-    
-    // 0 + A5 = A5
     ASSERT_EQ(zero.add(num).toString(), "A5");
-    // A5 - 0 = A5
     ASSERT_EQ(num.subtract(zero).toString(), "A5");
     
-    // A + 1 = 10
     Eleven num1("A");
     Eleven num2("1");
     ASSERT_EQ(num1.add(num2).toString(), "10");
