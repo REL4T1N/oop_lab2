@@ -1,3 +1,10 @@
+/*
+Файл lab2.cpp предназначен для раздельной инициализации и реализации методов класса "Eleven".
+Именно в данном файле представленна нго инициализация, а именно private параметры и функции и public конструкторы, деструкторы, методы класса,
+в дальнейшем возможно добавление сеттера и геттера!
+*/
+
+
 #include "../include/lab2.h"
 
 #include <cstddef>
@@ -6,22 +13,26 @@
 #include <stdexcept>
 
 // 1. Приватные функции
+// Функция для валидации значения
 bool Eleven::isValidDigit(unsigned char digit) const {
     return (digit >= 0 && digit <= 10);
 }
 
+// фнкция для удаления ведущих нулей в реверснутой записи 11-ричного числа
 void Eleven::removeZeroes() {
     while (digits.size() > 1 && digits.back() == 0) {
         digits.pop_back();
     }
 }
 
+// функция для перевода значения из char в unsigned char
 unsigned char Eleven::charToDigit(char c) const {
     if (c >= '0' && c <= '9') {return c - '0';}
     if (c == 'a' || c == 'A') {return 10;}
     throw std::invalid_argument("Invalid digit for base-11");
 }
 
+// функия для перевода значения из unsigned char в char
 char Eleven::digitToChar(unsigned char digit) const {
     if (digit >= 0 && digit <= 9) {return digit + '0';}
     if (digit == 10) {return 'A';}
@@ -30,13 +41,13 @@ char Eleven::digitToChar(unsigned char digit) const {
 
 
 // 2. Конструкторы
+// дефолтный (базовый) конструктор
 Eleven::Eleven() {
     digits.push_back(0); 
 }
 
 // вектор из n цифр t
 Eleven::Eleven(const size_t &n, unsigned char t) {
-
     if (!isValidDigit(t)) {
         throw std::invalid_argument("Invalid digit for base-11"); 
     }
@@ -72,6 +83,7 @@ Eleven::Eleven(const std::initializer_list<unsigned char> &t) {
     removeZeroes();
 }
 
+// инициализция простой строкой
 Eleven::Eleven(const std::string &t) {
     if (t.empty()) {
         digits.push_back(0);
@@ -87,6 +99,7 @@ Eleven::Eleven(const std::string &t) {
     removeZeroes();
 }
 
+// конструктор копирования
 Eleven::Eleven(const Eleven &other) {
     digits = other.digits;
 }
@@ -98,6 +111,7 @@ Eleven::Eleven(Eleven &&other) noexcept {
 
 // 3. Методы класса
 // 3.1 Операции сравнения
+// функция равенства двух экземпляров
 bool Eleven::equals(const Eleven& other) const {
     if (digits.size() != other.digits.size()) {return false;}
 
@@ -107,6 +121,7 @@ bool Eleven::equals(const Eleven& other) const {
     return true;
 }
 
+// функция сравнения, что выбранный экземпляр класса меньше, переданного в него
 bool Eleven::less(const Eleven& other) const {
     if (digits.size() < other.digits.size()) {return true;}
     if (digits.size() > other.digits.size()) {return false;}
@@ -118,6 +133,7 @@ bool Eleven::less(const Eleven& other) const {
     return false; // случай когда все элементы равны
 }
 
+// функция сравнения, что выбранный экземпляр класса больше, переданного в него
 bool Eleven::greater(const Eleven& other) const {
     if (digits.size() > other.digits.size()) {return true;}
     if (digits.size() < other.digits.size()) {return false;}
@@ -130,6 +146,7 @@ bool Eleven::greater(const Eleven& other) const {
 }
 
 // 3.2 Арифм. операции
+// операцйия сложения (создаём новый экземплроя класса добавив к выбранному переданный)
 Eleven Eleven::add(const Eleven& other) const {
     Eleven result;
     result.digits.clear(); // убираем 0
@@ -149,6 +166,7 @@ Eleven Eleven::add(const Eleven& other) const {
     return result;
 }
 
+// вычиатеаем переданный экземплря класса из выбранного, создавая новый экземпляр для ответа
 Eleven Eleven::subtract(const Eleven& other) const {
     // Если this < other, то результат будет отрицательный
     if (less(other)) {

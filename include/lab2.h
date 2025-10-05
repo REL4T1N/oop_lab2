@@ -1,3 +1,10 @@
+/*
+Файл lab2.h предназначен для раздельной инициализации и реализации методов класса "Eleven".
+Именно в данном файле представленна нго инициализация, а именно private параметры и функции и public конструкторы, деструкторы, методы класса,
+в дальнейшем возможно добавление сеттера и геттера!
+*/
+
+
 #ifndef LAB2_H
 #define LAB2_H
 
@@ -29,13 +36,14 @@ public:
     virtual ~Eleven() noexcept = default; // виртуальный деструктор
 
     // 2. Методы класса
+    // Операции сравнения (равенство, меньше, больше)
     bool equals(const Eleven& other) const;
     bool less(const Eleven& other) const;
     bool greater(const Eleven& other) const;
-
+    // Арифметичсеукоеи операции (сложение, вычитание)
     Eleven add(const Eleven& other) const;
     Eleven subtract(const Eleven& other) const;
-
+    // Метод для представления 11ричного числа в строковом виде
     std::string toString() const;
     
 };
