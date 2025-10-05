@@ -8,6 +8,14 @@
 #include <stdexcept>
 
 class Eleven {
+private:
+    std::vector<unsigned char> digits;
+    
+    bool isValidDigit(unsigned char digit) const;
+    void removeZeroes();
+    unsigned char charToDigit(char c) const;
+    char digitToChar(unsigned char digit) const;
+
 public:
     // 1. Конструкторы
     Eleven();
@@ -30,14 +38,6 @@ public:
 
     std::string toString() const;
     
-private:
-    std::vector<unsigned char> digits;
-    
-    bool isValidDigit(unsigned char digit) const;
-    void removeZeroes();
-    unsigned char charToDigit(char c) const;
-    char digitToChar(unsigned char digit) const;
-
 };
 
 
