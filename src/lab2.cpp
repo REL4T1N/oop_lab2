@@ -1,9 +1,11 @@
 #include "../include/lab2.h"
+
 #include <cstddef>
 #include <iostream>
 #include <algorithm>
 #include <stdexcept>
 
+// 1. Приватные функции
 bool Eleven::isValidDigit(unsigned char digit) const {
     return (digit >= 0 && digit <= 10);
 }
@@ -26,11 +28,15 @@ char Eleven::digitToChar(unsigned char digit) const {
     throw std::invalid_argument("Invalid digit value");
 }
 
+
+// 2. Конструкторы
 Eleven::Eleven() {
     digits.push_back(0); 
 }
 
+// вектор из n цифр t
 Eleven::Eleven(const size_t &n, unsigned char t) {
+
     if (!isValidDigit(t)) {
         throw std::invalid_argument("Invalid digit for base-11"); 
     }
@@ -39,6 +45,7 @@ Eleven::Eleven(const size_t &n, unsigned char t) {
         digits.push_back(0);
         return;
     }
+
     digits.resize(n, t);
     removeZeroes();
 }
@@ -57,9 +64,11 @@ Eleven::Eleven(const std::initializer_list<unsigned char> &t) {
     }
 
     digits.reserve(t.size());
+    // auto заменяет const unsigned char *
     for (auto item = t.end() - 1; item >= t.begin(); item--) {
         digits.push_back(*item);
     }
+
     removeZeroes();
 }
 
@@ -73,6 +82,7 @@ Eleven::Eleven(const std::string &t) {
         unsigned char digit = charToDigit(c);
         digits.push_back(digit);
     }
+
     std::reverse(digits.begin(), digits.end());
     removeZeroes();
 }
@@ -86,7 +96,8 @@ Eleven::Eleven(Eleven &&other) noexcept {
     digits = std::move(other.digits); 
 }
 
-
+// 3. Методы класса
+// 3.1 Операции сравнения
 bool Eleven::equals(const Eleven& other) const {
     if (digits.size() != other.digits.size()) {return false;}
 
@@ -115,12 +126,13 @@ bool Eleven::greater(const Eleven& other) const {
         if (digits[i] > other.digits[i]) {return true;}
         if (digits[i] < other.digits[i]) {return false;}
     }
-    return false;
+    return false; // случай когда все элементы равны
 }
 
+// 3.2 Арифм. операции
 Eleven Eleven::add(const Eleven& other) const {
     Eleven result;
-    result.digits.clear();
+    result.digits.clear(); // убираем 0
     size_t max_size = std::max(digits.size(), other.digits.size());
     unsigned char carry = 0;
 
@@ -138,6 +150,7 @@ Eleven Eleven::add(const Eleven& other) const {
 }
 
 Eleven Eleven::subtract(const Eleven& other) const {
+    // Если this < other, то результат будет отрицательный
     if (less(other)) {
         throw std::invalid_argument("Result in negative number");
     }
@@ -150,6 +163,7 @@ Eleven Eleven::subtract(const Eleven& other) const {
         int digit1, digit2, diff; 
         digit1 = digits[i];
         digit2 = (i < other.digits.size()) ? other.digits[i] : 0;
+
         diff = digit1 - borrow - digit2;
         if (diff < 0) {
             diff += 11;
@@ -165,9 +179,11 @@ Eleven Eleven::subtract(const Eleven& other) const {
     return result;
 }
 
+
+// 4. Метод для преобразования в строку
 std::string Eleven::toString() const {
     if (digits.empty()) return "0";
-
+    
     std::string result;
     for (auto it = digits.rbegin(); it != digits.rend(); ++it) {
         if (*it <= 9) {
