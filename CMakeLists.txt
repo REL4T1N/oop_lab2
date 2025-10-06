@@ -1,14 +1,10 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.14)
 project(lab2)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-
-# Добавление опций компиляции
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=maybe-uninitialized")
-
-# Установка Google Test
+# Установка Google Test через FetchContent
 include(FetchContent)
 FetchContent_Declare(
   googletest
@@ -18,17 +14,15 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
+# Основная программа
+add_executable(lab2 main.cpp src/lab2.cpp)
+target_include_directories(lab2 PRIVATE include)
 
-add_library(lab2_lib src/lab2.cpp)
-add_executable(lab2 main.cpp)
+# Тесты
+add_executable(tests tests/main_test.cpp tests/eleven_test.cpp src/lab2.cpp)
+target_include_directories(tests PRIVATE include)
+target_link_libraries(tests gtest gtest_main)
 
-target_link_libraries(lab2 PRIVATE lab2_lib)
-
-# Добавление тестов
+# Добавление тестов в CTest
 enable_testing()
-
-add_executable(lab2_tests tests/lab2_tests.cpp)
-target_link_libraries(lab2_tests lab2_lib gtest_main)
-
-# Добавление тестов в тестовый набор
-add_test(NAME lab2Tests COMMAND lab2_tests)
+add_test(NAME lab2_tests COMMAND tests)
