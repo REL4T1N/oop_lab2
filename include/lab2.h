@@ -1,52 +1,48 @@
-/*
-Файл lab2.h предназначен для раздельной инициализации и реализации методов класса "Eleven".
-Именно в данном файле представленна нго инициализация, а именно private параметры и функции и public конструкторы, деструкторы, методы класса,
-в дальнейшем возможно добавление сеттера и геттера!
-*/
-
-
 #ifndef LAB2_H
 #define LAB2_H
 
 #include <iostream>
-#include <vector>
 #include <string>
 #include <initializer_list>
 #include <stdexcept>
 
 class Eleven {
 private:
-    std::vector<unsigned char> digits;
+    size_t _size;
+    unsigned char* _digits;
     
     bool isValidDigit(unsigned char digit) const;
     void removeZeroes();
     unsigned char charToDigit(char c) const;
     char digitToChar(unsigned char digit) const;
+    void _copyFrom(const Eleven& other);
+    void _free();
 
 public:
     // 1. Конструкторы
     Eleven();
-
     Eleven(const size_t &n, unsigned char t = 0);
     Eleven(const std::initializer_list<unsigned char> &t);
     Eleven(const std::string &t);
 
+    // 2. Правило пяти
     Eleven(const Eleven &other);
-    Eleven(Eleven &&other) noexcept; // && - ссылка на rValue
-    virtual ~Eleven() noexcept = default; // виртуальный деструктор
+    Eleven(Eleven &&other) noexcept;
+    // Eleven& operator=(const Eleven& other); // Перегрузка оператора 
+    // Eleven& operator=(Eleven&& other) noexcept; // Перегрузка оператора
+    virtual ~Eleven() noexcept;
 
-    // 2. Методы класса
-    // Операции сравнения (равенство, меньше, больше)
+    // 3. Методы класса
     bool equals(const Eleven& other) const;
     bool less(const Eleven& other) const;
     bool greater(const Eleven& other) const;
-    // Арифметичсеукоеи операции (сложение, вычитание)
     Eleven add(const Eleven& other) const;
     Eleven subtract(const Eleven& other) const;
-    // Метод для представления 11ричного числа в строковом виде
     std::string toString() const;
     
+    // 4. Вспомогательные методы для отладки
+    size_t size() const { return _size; }
+    const unsigned char* data() const { return _digits; }
 };
-
 
 #endif
